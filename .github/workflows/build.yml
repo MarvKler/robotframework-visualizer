@@ -5,12 +5,10 @@ on:
     # branches:
     #   - main
     paths:
-      - '**.yml'
       - '**.py'
       - pyproject.toml
   pull_request:
     paths:
-      - '**.yml'
       - '**.py'
       - pyproject.toml
 
