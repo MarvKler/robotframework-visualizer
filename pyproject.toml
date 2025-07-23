@@ -1,0 +1,90 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "robotframework-visualizer"
+dynamic = ["version"]
+description = "A Robot Framework library providing keywords for the visualization of 'date / value' objects."
+readme = "README.md"
+requires-python = ">=3.8"
+authors = [
+  { name = "Marvin Klerx", email = "marvinklerx20@gmail.com" }
+]
+license = { text = "Apache-2.0" }
+classifiers = [
+  "Development Status :: 1 - Planning",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = [
+  "overrides",
+  "robotframework",
+  "robotframework-pythonlibcore",
+  "pandas",
+  "matplotlib"
+]
+
+
+[project.optional-dependencies]
+dev = [
+    "hatch",
+    "ruff",
+    "pytest"
+]
+
+[project.urls]
+Repository = "https://github.com/MarvKler/robotframework-visualizer"
+Documentation = "https://github.com/MarvKler/robotframework-visualizer#readme"
+Issues = "https://github.com/MarvKler/robotframework-visualizer/issues"
+
+[tool.hatch.build.targets.wheel]
+require-runtime-dependencies = true
+only-include = ["src/Visualizer"]
+sources = ["src"]
+
+[tool.hatch.version]
+path = "src/Visualizer/__about__.py"
+
+[tool.hatch.build]
+dev-mode-dirs = ["src"]
+
+[tool.hatch.envs.types]
+extra-dependencies = [
+  "mypy>=1.0.0",
+]
+[tool.hatch.envs.types.scripts]
+check = "mypy --install-types --non-interactive {args:src/Visualizer tests}"
+
+[tool.coverage.run]
+source_pkgs = ["Visualizer", "tests"]
+branch = true
+parallel = true
+omit = [
+  "src/Visualizer/__about__.py",
+]
+
+[tool.coverage.paths]
+robotframework_tablelibrary = ["src/TableLibrary", "*/src/TableLibrary"]
+tests = ["tests", "*/robotframework-tablelibrary/tests"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
+
+[tool.hatch.envs.dev]
+dependencies = [
+  "ruff",
+  "pytest"
+]
+[tool.hatch.envs.dev.scripts]
+lint = "ruff check ."
+atest = "robot tests/atest/"
+utest = "pytest"
