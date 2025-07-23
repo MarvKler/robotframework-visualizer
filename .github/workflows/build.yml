@@ -60,7 +60,7 @@ jobs:
       run: pip install dist/*.whl
 
     - name: Test import
-      run: python -c "import Visualizers"
+      run: python -c "import Visualizer"
 
   # run-acceptance-tests:
   #   runs-on: ubuntu-latest
