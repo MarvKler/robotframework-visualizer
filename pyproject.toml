@@ -7,7 +7,7 @@ name = "robotframework-visualizer"
 dynamic = ["version"]
 description = "A Robot Framework library providing keywords for the visualization of 'date / value' objects."
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 authors = [
   { name = "Marvin Klerx", email = "marvinklerx20@gmail.com" }
 ]
