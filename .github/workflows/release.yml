@@ -53,6 +53,8 @@ jobs:
           git add src/Visualizer/__about__.py
           git commit -m "chore: bump version"
           git push
+        env:
+          GIT_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build wheel with Hatch
         run: hatch build
