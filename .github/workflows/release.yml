@@ -1,0 +1,85 @@
+name: Bump Version From PR Title
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+jobs:
+  bump-version:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Hatch
+        run: pip install hatch
+      
+      - name: Install dependencies
+        run: hatch env create dev
+
+      - name: Determine bump level and bump version
+        id: bump
+        run: |
+          TITLE="${{ github.event.pull_request.title }}"
+          echo "PR Title: $TITLE"
+          
+          if [[ "$TITLE" == major:* ]]; then
+            hatch version major
+            echo "bump=true" >> $GITHUB_OUTPUT
+          elif [[ "$TITLE" == minor:* ]]; then
+            hatch version minor
+            echo "bump=true" >> $GITHUB_OUTPUT
+          elif [[ "$TITLE" == patch:* ]]; then
+            hatch version patch
+            echo "bump=true" >> $GITHUB_OUTPUT
+          else
+            echo "No version bump (chore or other)."
+            echo "bump=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push version
+        if: steps.bump.outputs.bump == 'true'
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add src/Visualizer/__about__.py
+          git commit -m "chore: bump version"
+          git push
+
+      - name: Build wheel with Hatch
+        run: hatch build
+
+      # - name: Publish to PyPI
+      #   env:
+      #     TWINE_USERNAME: __token__
+      #     TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+      #   run: twine upload dist/*
+
+      # - name: Publish to Test PyPI
+      #   env:
+      #     TWINE_USERNAME: __token__
+      #     TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
+      #   run: |
+      #     pip install twine
+      #     twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+
+      - name: Get new version
+        if: steps.bump.outputs.bump == 'true'
+        id: version
+        run: |
+          VERSION=$(grep '__version__' src/Visualizer/__about__.py | cut -d '"' -f2)
+          echo "version=v$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Create Git Tag
+        if: steps.bump.outputs.bump == 'true'
+        run: |
+          git tag ${{ steps.version.outputs.version }}
+          git push origin ${{ steps.version.outputs.version }}
