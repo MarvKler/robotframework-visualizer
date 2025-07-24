@@ -69,7 +69,7 @@ omit = [
 ]
 
 [tool.coverage.paths]
-robotframework_tablelibrary = ["src/TableLibrary", "*/src/TableLibrary"]
+robotframework_visualizer = ["src/Visualizer", "*/src/Visualizer"]
 tests = ["tests", "*/robotframework-tablelibrary/tests"]
 
 [tool.coverage.report]
