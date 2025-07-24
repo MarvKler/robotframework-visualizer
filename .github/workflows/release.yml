@@ -61,19 +61,19 @@ jobs:
       - name: Build wheel with Hatch
         run: hatch build
 
-      # - name: Publish to PyPI
-      #   env:
-      #     TWINE_USERNAME: __token__
-      #     TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
-      #   run: twine upload dist/*
-
-      - name: Publish to Test PyPI
+      - name: Publish to PyPI
         env:
           TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.TEST_PYPI_TOKEN }}
-        run: |
-          pip install twine
-          twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+        run: twine upload dist/*
+
+      # - name: Publish to Test PyPI
+      #   env:
+      #     TWINE_USERNAME: __token__
+      #     TWINE_PASSWORD: ${{ secrets.TEST_PYPI_TOKEN }}
+      #   run: |
+      #     pip install twine
+      #     twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 
       - name: Get new version
         if: steps.bump.outputs.bump == 'true'
