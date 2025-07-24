@@ -29,5 +29,4 @@ class Visualizer(HybridCore):
         libraries = [
             Keywords()
         ]
-
         super().__init__(libraries)
