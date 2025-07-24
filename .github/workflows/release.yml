@@ -22,7 +22,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install Hatch
-        run: pip install hatch
+        run: pip install hatch twine
       
       - name: Install dependencies
         run: hatch env create dev
@@ -64,16 +64,16 @@ jobs:
       # - name: Publish to PyPI
       #   env:
       #     TWINE_USERNAME: __token__
-      #     TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+      #     TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
       #   run: twine upload dist/*
 
-      # - name: Publish to Test PyPI
-      #   env:
-      #     TWINE_USERNAME: __token__
-      #     TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
-      #   run: |
-      #     pip install twine
-      #     twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+      - name: Publish to Test PyPI
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.TEST_PYPI_TOKEN }}
+        run: |
+          pip install twine
+          twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 
       - name: Get new version
         if: steps.bump.outputs.bump == 'true'
