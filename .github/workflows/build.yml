@@ -103,13 +103,13 @@ jobs:
       run: pip install hatch
 
     - name: Install dependencies
-      run: hatch env create dev
+      run: pip install 
 
     - name: Generate libdoc page
       run: |
-        pip list
         mkdir -p output
-        libdoc src/Visualizer/ output/out.html
+        hatch run dev:docs
+        ls -la output/
 
     - name: Deploy docs to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
