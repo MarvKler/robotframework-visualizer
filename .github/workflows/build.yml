@@ -9,6 +9,7 @@ on:
       - pyproject.toml
   pull_request:
     paths:
+      - '**.yml'
       - '**.py'
       - pyproject.toml
 
@@ -85,36 +86,6 @@ jobs:
 
     - name: Run robot framework acceptance-tests
       run: hatch run dev:atest
-
-  doc-generation:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.12'
-
-    - name: Install Hatch
-      run: pip install hatch
-
-    - name: Install dependencies
-      run: hatch env create dev
-
-    - name: Generate libdoc page
-      if: steps.bump.outputs.bump == 'true'
-      run: |
-        mkdir -p output
-        libdoc src/Visualizer/ output/out.html
-
-    - name: Deploy docs to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./output
 
   # run-unit-tests:
   #   runs-on: ubuntu-latest

@@ -81,6 +81,7 @@ exclude_lines = [
 
 [tool.hatch.envs.dev]
 dependencies = [
+  "robotframework",
   "ruff",
   "pytest"
 ]
@@ -88,3 +89,4 @@ dependencies = [
 lint = "ruff check ."
 atest = "robot tests/atest/"
 utest = "pytest"
+docs = "libdoc src/Visualizer/ docs/keyword_docs.html"
