@@ -81,6 +81,7 @@ exclude_lines = [
 
 [tool.hatch.envs.dev]
 dependencies = [
+  "robotframework",
   "ruff",
   "pytest"
 ]
