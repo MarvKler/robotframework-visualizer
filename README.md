@@ -13,6 +13,10 @@ Keywords from this repository can visualize CSV data as graph within the robotfr
 
 Link to GitHub Project: [robotframework-visualizer](https://github.com/MarvKler/robotframework-visualizer)
 
+## Keyword Documentation
+
+Find here the keyword documentation: [Keyword Documentation](https://marvkler.github.io/robotframework-visualizer/keywords.html)
+
 ## Use Case
 
 If you have time-series data like energey measurements or temperature values over period of time, you can use this library to visualize thos raw data as visual diagram into your robot framework logfile.     
