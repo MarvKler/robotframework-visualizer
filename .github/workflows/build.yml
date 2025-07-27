@@ -9,6 +9,7 @@ on:
       - pyproject.toml
   pull_request:
     paths:
+      - '**.yml'
       - '**.py'
       - pyproject.toml
 
@@ -106,6 +107,7 @@ jobs:
 
     - name: Generate libdoc page
       run: |
+        pip list
         mkdir -p output
         libdoc src/Visualizer/ output/out.html
 
