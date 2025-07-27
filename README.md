@@ -1,4 +1,4 @@
-# robot-visualizer
+# Robot Framework Visualizer
 Keywords from this repository can visualize CSV data as graph within the robotframework log file.
 
 ## Statistics
@@ -29,7 +29,7 @@ pip install robotframework-visualizer
 
 ## Usage
 
-```python
+```robot
 *** Settings ***
 Library    Visualizer
 
