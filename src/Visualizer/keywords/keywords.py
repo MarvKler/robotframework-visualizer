@@ -77,7 +77,18 @@ class Keywords():
     # Public Keywords for Robot Framework:
     ####################################################################################################################
 
-    @keyword()
+    @keyword(tags=['Visualizer'])
+    def reset(self):
+        """
+        Keyword to reset the complete internal data object!\n
+        """
+        self.graph_data.clear()
+        self.diagram_name = None
+        self.add_graph = False
+        self.path = {}
+
+
+    @keyword(tags=['Visualizer'])
     def add_to_diagramm(
             self,
             csv_data: str,
@@ -87,7 +98,14 @@ class Keywords():
             line_color: GraphColor = GraphColor.Blue
         ):
         """
-        TBD
+        Add a single graph object to the diagram to show in the report!\n
+        You can add & visualize multiple graphs within one diagram.\n
+
+        Please be aware that the diagram is created & shown in the log *after* executing the ``Visualize`` keyword! 
+        Executing ``Add To Diagram`` only, is not enough!
+
+        = Example =
+        |    Add To Diagram    csv_file_path.csv    _time_header    _value_header    Your Graph Name    Green
         """
         
         # Einlesen der CSV mit nur den benötigten Spalten
@@ -108,12 +126,79 @@ class Keywords():
         })
 
     @keyword(tags=['Visualizer'])
+    def remove_from_diagram(
+            self,
+            graph_name: str
+        ) -> None:
+        """
+        Keyword to remove an already added graph from the diagram.
+
+        = Arguments =
+        ``graph_name``: The graph name, defined by adding the graph to the diagram previously!
+        
+        = Example =
+        |    Remove From Diagram    graph_name=Spannung
+        """
+
+        for i, graph in enumerate(self.graph_data):
+            if graph['graph_name'] == graph_name:
+                del self.graph_data[i]
+                logger.debug("Removed graph from diagram!")
+                return True
+        logger.debug(f"Graph with name '{graph_name}' was not found in the diagram list!")
+        return False
+
+    @keyword(tags=['Visualizer'])
+    def modify_graph_metadata(
+            self,
+            graph_name: str,
+            x_axis: str = None,
+            y_axis: str = None,
+            color: GraphColor = None
+        ) -> None:
+        """
+        Keyword to modify the metadata of an already added graph.\n
+        You can add the following metadata:\n
+        - name of ``x_axis```\n
+        - name of ``y_axis``\n
+        - color of the graph\n
+
+        = Arguments =
+        Modifying metadata requires no mandatory parameters, as you actively want to change something!\n
+        When passing ``None``to all arguments (except graph name), nothing will happen!
+
+        ``graph_name``-> mandatory arg, because the graph is identified with this defined name.
+
+        = Example =
+        |    Modify Graph Metadata    graph_name=Spannung    color=Blue
+        |    Modify Graph Metadata    graph_name=Strom    x_axis=_datetime    color=Red
+        """
+
+        updates = {
+            'x_axis': x_axis,
+            'y_axis': y_axis,
+            'color': color.value if color else None
+        }
+
+        for graph in self.graph_data:
+            if graph['graph_name'] == graph_name:
+                for key, value in updates.items():
+                    if value is not None:
+                        graph[key] = value
+                self._validate_columns(graph['df'], graph['x_axis'], graph['y_axis'])
+
+    @keyword(tags=['Visualizer'])
     def visualize(
             self,
             diagram_name: str
         ):
         """
-        TBD
+        Keyword to create & visualize the added graphs into your log file.\n
+        
+        All graph data is removed after executing this keyword - afterwards you need add new graph data for a new diagram.‚
+
+        = Arguments =
+        ``diagram_name`` -> Define a name of the diagram - visible in the log above the visualized diagram.
         """
         if not self.graph_data:
             raise ValueError("No graph data available. Call 'Add To Diagramm' first.")
@@ -148,6 +233,5 @@ class Keywords():
         plt.ylabel("Value(s)")
         plt.legend()
         plt.tight_layout(rect=[0, 0, 1, 0.95])
-
         # Save plot to PNG file
         plt.savefig(full_file_path, format='png')
