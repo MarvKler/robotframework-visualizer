@@ -53,7 +53,7 @@ class Keywords():
             # csv_data is a file path
             return pd.read_csv(csv_data, usecols=usecols)
         elif isinstance(csv_data, str):
-            # csv_data is a CSV string
+            # csv_data is a csv string
             csv_buffer = StringIO(csv_data)
             return pd.read_csv(csv_buffer, usecols=usecols)
         else:
