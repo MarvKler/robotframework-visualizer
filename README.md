@@ -1,4 +1,4 @@
-# robot-visualizer
+# Robot Framework Visualizer
 Keywords from this repository can visualize CSV data as graph within the robotframework log file.
 
 ## Statistics
@@ -29,14 +29,28 @@ pip install robotframework-visualizer
 
 ## Usage
 
-```python
+```robot
 *** Settings ***
 Library    Visualizer
 
 
 *** Test Cases ***
-Visualize Data
-    ${csv_file_path} =    Keyword.Write Data To Csv
-    Visualizer.Add To Diagram     ${csv_file_path}    _time    _value    Value Axis    Blue
-    Visualizer.Visualize
+Add One Data Set
+    [Documentation]    Add one graph to diagram.
+    Visualizer.Add To Diagramm    ${CURDIR}${/}testdata${/}dummy_strom_spannung.csv    _time    _strom    Strom    Blue
+    Visualizer.Visualize    Strom / Spannung Verlauf
+
+Add Two Data Sets
+    [Documentation]    Add two graphs to diagram.
+    Visualizer.Add To Diagramm    ${CURDIR}${/}testdata${/}dummy_strom_spannung.csv    _time    _spannung    Spannung    Green
+    Visualizer.Add To Diagramm    ${CURDIR}${/}testdata${/}dummy_strom_spannung.csv    _time    _strom    Strom    Blue
+    Visualizer.Visualize    Strom / Spannung Verlauf
 ```
+
+## Result
+
+### Added one graph to diagram
+![alt text](docs/one_graph.png)
+
+### Added one graph to diagram
+![alt text](docs/two_graphs.png)

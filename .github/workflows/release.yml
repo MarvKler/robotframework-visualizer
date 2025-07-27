@@ -1,4 +1,4 @@
-name: Bump Version From PR Title
+name: release
 
 on:
   pull_request:
