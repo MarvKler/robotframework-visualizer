@@ -15,13 +15,10 @@ class Visualizer(HybridCore):
     """
     Visualizer Library for creating visual diagrams as embedded 'png' images in the Robot Framework log file.\n
     
-    = Current Implementation =
+    = Use Case =
     The initial idea of the library was to create diagrams with the date time series on the x-axis & the raw value on the y-axis.\n
-    Currently, you need to pass the CSV header names into keyword to visualize the correct data.
-
-    = Future Implementation =
-    The future implementation idea is, to pass multiple CSV header names into the keyword to visualize more than one value time series on the y-axis.
-    The x-axis should be kept reserved for the datetime time-series.
+    You can pass a CSV file or data-object & create one or multiple graphs within a diagram.
+    First, you need to add data to a diagram & afterwards you can use ``Visualize`` keyword to create the diagram as png image.
     """
 
     def __init__(self):
