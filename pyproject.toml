@@ -89,4 +89,4 @@ dependencies = [
 lint = "ruff check ."
 atest = "robot tests/atest/"
 utest = "pytest"
-docs = "libdoc src/Visualizer/ output/keyword_docs.html"
+docs = "libdoc src/Visualizer/ docs/keyword_docs.html"
