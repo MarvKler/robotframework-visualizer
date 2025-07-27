@@ -105,7 +105,6 @@ jobs:
       run: hatch env create dev
 
     - name: Generate libdoc page
-      if: steps.bump.outputs.bump == 'true'
       run: |
         mkdir -p output
         libdoc src/Visualizer/ output/out.html
