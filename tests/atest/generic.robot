@@ -32,5 +32,18 @@ Reset Data Object
     BuiltIn.Run Keyword And Expect Error    REGEXP: ValueError.*
     ...    Visualizer.Visualize    Strom / Spannung Verlauf
 
-
-    
+Multiple Diagrams in One Test Case
+    GROUP    Diagram 01
+        Visualizer.Add To Diagramm    ${CURDIR}${/}testdata${/}dummy_strom_spannung.csv    _time    _spannung    Spannung    Green
+        Visualizer.Add To Diagramm    ${CURDIR}${/}testdata${/}dummy_strom_spannung.csv    _time    _strom    Strom    Blue
+        Visualizer.Visualize    Diagram 1
+    END
+    GROUP    Diagram 02
+        Visualizer.Add To Diagramm    ${CURDIR}${/}testdata${/}dummy_strom_spannung.csv    _time    _spannung    Spannung    Green
+        Visualizer.Visualize    Diagram 2
+    END
+    GROUP    Diagram 03
+        Visualizer.Add To Diagramm    ${CURDIR}${/}testdata${/}dummy_strom_spannung.csv    _time    _spannung    Spannung    Green
+        Visualizer.Add To Diagramm    ${CURDIR}${/}testdata${/}dummy_strom_spannung.csv    _time    _strom    Strom    Blue
+        Visualizer.Visualize    Diagram 3
+    END
