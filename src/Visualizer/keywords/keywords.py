@@ -10,7 +10,6 @@ from io import StringIO
 import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.use('Agg')
-import matplotlib.dates as mdates
 import random
 
 from ..utils.enums import GraphColor
