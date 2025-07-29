@@ -235,3 +235,7 @@ class Keywords():
         plt.tight_layout(rect=[0, 0, 1, 0.95])
         # Save plot to PNG file
         plt.savefig(full_file_path, format='png')
+
+        # Reset internal data cache for each diagram
+        self.graph_data.clear()
+        self.diagram_name = None
