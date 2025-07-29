@@ -59,9 +59,11 @@ jobs:
           GIT_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build wheel with Hatch
+        if: steps.bump.outputs.bump == 'true'
         run: hatch build
 
       - name: Publish to PyPI
+        if: steps.bump.outputs.bump == 'true'
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
