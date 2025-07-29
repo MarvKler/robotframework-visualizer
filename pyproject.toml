@@ -41,6 +41,7 @@ dev = [
 Repository = "https://github.com/MarvKler/robotframework-visualizer"
 Documentation = "https://github.com/MarvKler/robotframework-visualizer#readme"
 Issues = "https://github.com/MarvKler/robotframework-visualizer/issues"
+Keywords = "https://marvkler.github.io/robotframework-visualizer/keywords.html"
 
 [tool.hatch.build.targets.wheel]
 require-runtime-dependencies = true
