@@ -10,7 +10,6 @@ from io import StringIO
 import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.use('Agg')
-import matplotlib.dates as mdates
 import random
 
 from ..utils.enums import GraphColor
@@ -50,10 +49,8 @@ class Keywords():
 
     def _get_csv_as_pandas(self, csv_data: str, usecols = None) -> DataFrame:
         if isinstance(csv_data, str) and os.path.isfile(csv_data):
-            # csv_data is a file path
             return pd.read_csv(csv_data, usecols=usecols)
         elif isinstance(csv_data, str):
-            # csv_data is a csv string
             csv_buffer = StringIO(csv_data)
             return pd.read_csv(csv_buffer, usecols=usecols)
         else:
@@ -66,6 +63,19 @@ class Keywords():
         for col in y_axis:
             if col not in csv_data.columns:
                 raise ValueError(f"Column '{col}' not found in CSV!")
+            
+    def _convert_timestamp(
+            self,
+            csv_data: DataFrame,
+        ):
+        """ Convert timestamp into readable datetime format."""
+        try:
+            dt = pd.to_datetime(csv_data, unit='ms')
+            if (dt.dt.year < 1971).any():
+                raise ValueError
+            return dt
+        except Exception:
+            return pd.to_datetime(csv_data, unit='s')
             
     def _cleanup(self):
         self.graph_data.clear()
@@ -107,16 +117,15 @@ class Keywords():
         = Example =
         |    Add To Diagram    csv_file_path.csv    _time_header    _value_header    Your Graph Name    Green
         """
-        
-        # Einlesen der CSV mit nur den benötigten Spalten
+        # Read CSV data into a pandas DataFrame        
         df = self._get_csv_as_pandas(csv_data, usecols=[csv_header_x_axis, csv_header_y_axis])
         self._validate_columns(df, csv_header_x_axis, csv_header_y_axis)
 
-        # X-Achse als Zeit formatieren
-        df[csv_header_x_axis] = pd.to_datetime(df[csv_header_x_axis], format="mixed")
-        df = df.sort_values(by=csv_header_x_axis)
+        # If x-axis is a timestamp in milliseconds or seconds, convert it to a readable format
+        if df[csv_header_x_axis].astype(str).str.fullmatch(r"\d{10}|\d{13}").all():
+            df[csv_header_x_axis] = self._convert_timestamp(df[csv_header_x_axis])
 
-        # Zwischenspeichern
+        # Add data to internal graph data list
         self.graph_data.append({
             "df": df,
             "x_axis": csv_header_x_axis,
@@ -222,19 +231,20 @@ class Keywords():
 
         # Plot given data fron entry list
         for entry in self.graph_data:
-            df = entry["df"]
+            df = DataFrame(entry["df"])
             x = entry["x_axis"]
             y = entry["y_axis"]
             color = entry["color"]
+            df[x] = pd.to_datetime(df[x], errors="coerce")
             df.plot(x=x, y=y, ax=ax, label=entry['graph_name'], color=color)
-        ax.xaxis.set_major_formatter(mdates.DateFormatter('%d.%m.%Y %H:%M'))
-        fig.autofmt_xdate()
+
         plt.xlabel(self.graph_data[0]["x_axis"])
         plt.ylabel("Value(s)")
         plt.legend()
         plt.tight_layout(rect=[0, 0, 1, 0.95])
         # Save plot to PNG file
         plt.savefig(full_file_path, format='png')
+        plt.close(fig)
 
         # Reset internal data cache for each diagram
         self.graph_data.clear()
