@@ -236,6 +236,7 @@ class Keywords():
             y = entry["y_axis"]
             color = entry["color"]
             df[x] = pd.to_datetime(df[x], errors="coerce")
+            df = df.dropna(subset=[x])
             df.plot(x=x, y=y, ax=ax, label=entry['graph_name'], color=color)
 
         plt.xlabel(self.graph_data[0]["x_axis"])
